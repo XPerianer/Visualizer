@@ -1,0 +1,97 @@
+<html>
+<title>Visualizer by XPerianer</title>
+
+<style type="text/css">
+	body {
+		padding: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+
+	#colorchoose {
+		width: 300px;
+		margin-left: 300px;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+</style>
+
+
+
+
+<body>
+
+	<canvas id="canvas"></canvas>
+	<div id="control">
+		Command: <input type="text" name="Command" id="KeySetCommand">
+		Keycode: <input type="text" name="Keycode" id="KeySetKeycode">
+		Set as Command: <input type="button" name="KeyButton" id="KeySetButton" value="Enter">
+		<form id="colorchoose">
+			<input class="color" type="range" min="0" max="255" value="255" onchange="color.r = this.value;draw();" />Red
+			<br>
+			<input class="color" type="range" min="0" max="255" value="255" onchange="color.g = this.value;draw();" />Green
+			<br>
+			<input class="color" type="range" min="0" max="255" value="255" onchange="color.b = this.value;draw();" />Blue
+			<br>
+		</form>
+	</div>
+</body>
+
+
+
+<script type="text/javascript">
+	// Initialize canvas and required variable
+	var color = {
+		r: "255",
+		g: "255",
+		b: "255",
+	};
+
+
+	function draw() {
+
+	}
+
+	var keybindings = {
+		q: "10,2,8,100,0,0",
+		w: "10,2,5,255,0,0",
+		e: "10,2,1,255,0,0",
+		r: "1,2,0,255,0,0",
+		t: "8,0",
+		a: "3,2,50,255,0,0",
+		s: "6,0",
+		d: "2,0",
+		f: "4,0",
+		y: "10,2,300,0,0,255",
+		x: "10,2,1,0,0,255",
+		c: "10,2,0,0,0,255",
+		v: "7,2,10,0,0,0"
+	}
+
+
+	window.addEventListener('keydown', function(evt) {
+		if (evt.key == ' ') {
+			socket.send("[0]");
+		} else {
+			socket.send("[" + keybindings[evt.key] + "]");
+		}
+		event.preventDefault();
+
+	}, false);
+
+	document.getElementById("KeySetButton").onclick = function(){
+			keybindings[document.getElementById("KeySetKeycode").value] = document.getElementById("KeySetCommand").value;
+	};
+
+
+
+	var socket = new WebSocket('ws://raspberrypi:8000');
+	socket.onopen = function() {};
+	socket.onmessage = function(message) {};
+	socket.onerror = function(error) {
+		console.log('WebSocket error: ' + error);
+	};
+</script>
+
+</html>
